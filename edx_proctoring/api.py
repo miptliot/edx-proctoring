@@ -572,8 +572,7 @@ def create_exam_attempt(exam_id, user_id, taking_as_proctored=False):
             scheme=scheme,
             hostname=settings.SITE_NAME,
             path=reverse(
-                'edx_proctoring.anonymous.proctoring_launch_callback.start_exam',
-                args=[attempt_code]
+                 'jump_to', kwargs={'course_id': exam['course_id'], 'location': exam['content_id']}
             )
         )
 
@@ -937,7 +936,7 @@ def update_attempt_status(exam_id, user_id, to_status, raise_if_not_found=True, 
         credit_state = credit_service.get_credit_state(
             exam_attempt_obj.user_id,
             exam_attempt_obj.proctored_exam.course_id,
-            return_course_name=True
+            return_course_info=True
         )
 
         send_proctoring_attempt_status_email(
@@ -1017,7 +1016,10 @@ def send_proctoring_attempt_status_email(exam_attempt_obj, course_name):
         subject=subject
     )
     email.content_subtype = "html"
-    email.send()
+    try:
+        email.send()
+    except:
+        pass
 
 
 def remove_exam_attempt(attempt_id, requesting_user):
@@ -1051,7 +1053,7 @@ def remove_exam_attempt(attempt_id, requesting_user):
 
     if instructor_service:
         instructor_service.delete_student_attempt(
-            username, course_id, content_id #, requesting_user
+            username, course_id, content_id, requesting_user
         )
 
     # see if the status transition this changes credit requirement status
@@ -1446,7 +1448,7 @@ def get_attempt_status_summary(user_id, course_id, content_id):
         credit_state = credit_service.get_credit_state(
             user_id,
             unicode(course_id),
-            return_course_name=True
+            return_course_info=True
         )
         if not _check_eligibility_of_enrollment_mode(credit_state):
             return None
@@ -1867,7 +1869,7 @@ def get_student_view(user_id, course_id, content_id,
     credit_service = get_runtime_service('credit')
 
     # call service to get course end date.
-    credit_state = credit_service.get_credit_state(user_id, course_id, return_course_name=True)
+    credit_state = credit_service.get_credit_state(user_id, course_id, return_course_info=True)
     course_end_date = credit_state.get('course_end_date', None)
 
     exam_id = None
