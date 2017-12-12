@@ -2,24 +2,20 @@
 <div class="sequence timed-exam entrance" data-exam-id="{{exam_id}}">
   <h3>
     {% blocktrans %}
-    {{ exam_name }} is a Timed Exam ({{total_time}})
+    {{ display_name }} – это экзамен с ограниченимем по времени ({{total_time}})
     {% endblocktrans %}
   </h3>
   <p>
-    {% trans "This exam has a time limit associated with it." %}
+    {% trans "Этот экзамен имеет ограничение по времени." %}
     <strong>
-      {% trans "To pass this exam, you must complete the problems in the time allowed." %}
+      {% trans "Чтобы пройти экзамен, вы должны выполнить все задания за отведенное время." %}
     </strong>
-    {% trans "After you select " %}
-    <strong>
-      {% trans "I am ready to start this timed exam," %}
-    </strong>
-    {% trans "you will have "%} {{total_time|lower}} {% trans " to complete and submit the exam." %}
+    {% trans "С момента старта экзамена у вас будет "%} {{total_time|lower}} {% trans " для прохождения." %}
   </p>
   <button class="gated-sequence start-timed-exam" data-ajax-url="{{enter_exam_endpoint}}" data-exam-id="{{exam_id}}">
     <a>
       {% blocktrans %}
-        I am ready to start this timed exam.
+        Я готов! Приступить к выполнению экзамена.
       {% endblocktrans %}
       <i class="fa fa-arrow-circle-right"></i>
     </a>

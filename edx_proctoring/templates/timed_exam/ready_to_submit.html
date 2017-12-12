@@ -2,12 +2,13 @@
 <div class="sequence timed-exam completed" data-exam-id="{{exam_id}}">
   <h3>
     {% blocktrans %}
-      Are you sure that you want to submit your timed exam?
+      Экзамен с ограничением по времени подошел к концу.
     {% endblocktrans %}
   </h3>
   <p>
     {% blocktrans %}
-      Make sure that you have selected "Check" or "Final Check" for each problem before you submit your exam.
+      Убедитесь, что ваши ответы и работы готовы к отправке. После этого завершите экзамен
+      и ваша работа будет оценена.
     {% endblocktrans %}
   </p>
   <p>
@@ -17,7 +18,7 @@
   </p>
   <button type="button" name="submit-proctored-exam" class="exam-action-button btn btn-pl-primary btn-base" data-action="submit" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}">
     {% blocktrans %}
-      Yes, submit my timed exam.
+      Я готов! Отправить мои ответы и получить оценку.
     {% endblocktrans %}
   </button>
   {% if does_time_remain %}

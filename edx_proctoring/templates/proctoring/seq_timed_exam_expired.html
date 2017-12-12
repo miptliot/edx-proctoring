@@ -1,0 +1,23 @@
+{% load i18n %}
+<div class="critical-time sequence proctored-exam entrance" data-exam-id="{{exam_id}}">
+  <h3>
+    {% blocktrans %}
+      Вы не прошли экзамен за отведенное вам время
+    {% endblocktrans %}
+  </h3>
+  <p>
+    {% blocktrans %}
+      Вы не сможете получить сертификат или удостоверение за этот курс, т.к. не выполнили
+      экзамен за отведенное время. Посмотреть результаты прохождения курса вы можете во вкладке
+      <a href="{{progress_page_url}}">Progress page</a>
+    {% endblocktrans %}
+  </p>
+  <div class="proctored-exam-message">
+    <p>
+      {% blocktrans %}
+        Другие работы, которые вы выполнили в курсе, дают вклад в ваш общий балл.
+      {% endblocktrans %}
+    </p>
+  </div>
+</div>
+{% include 'proctoring/seq_timed_exam_footer.html' %}

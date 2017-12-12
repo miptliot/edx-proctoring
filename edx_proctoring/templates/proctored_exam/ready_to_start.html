@@ -3,21 +3,18 @@
   <div>
     <h3>
     {% blocktrans %}
-      Follow these instructions
+      Следуйте инструкциям:
     {% endblocktrans %}
     </h3>
     <p>
-      {% blocktrans %}
-        &#8226; Do not close the proctoring window until you have completed and submitted your exam. </br>
-        &#8226; You cannot stop the timer once you start. </br>
-        &#8226; If the allotted time expires before your end your exam, the answers you have completed up
-        to that point are submitted for grading and your proctoring session is uploaded for review. </br>
-      {% endblocktrans %}
+      &#8226; {% blocktrans %}Не зкрывайте окно прокторигового приложения пока не пройдете и не отправите результаты экзамена.{% endblocktrans %} </br>
+      &#8226; {% blocktrans %}Когда вы приступите к сдаче экзамена у вас будует {% endblocktrans %} {{ total_time }} {% blocktrans %}для его прохождения.{% endblocktrans %} </br>
+      &#8226; {% blocktrans %}Если предоставленное время истекло до того, как вы закончили выполнение заданий, ваша прокторинговая сессия автоматически отправляется на проверку с теми ответами, которые вы уже успеете дать к тому моменту.{% endblocktrans %} </br>
     </p>
     <div>
       <button type="button" class="exam-action-button proctored-enter-exam btn btn-pl-primary btn-base" data-action="start" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}">
         {% blocktrans %}
-          Start my exam
+          Начать прохождение экзамена
         {% endblocktrans %}
       </button>
     </div>

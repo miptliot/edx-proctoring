@@ -2,19 +2,14 @@
 <div class="sequence proctored-exam completed" data-exam-id="{{exam_id}}">
   <h3>
     {% blocktrans %}
-      Are you sure you want to end your proctored exam?
+      Вы уверены, что хотите закончить прохождение экзамена и сдать работу на проверку?
     {% endblocktrans %}
   </h3>
   <p>
     {% blocktrans %}
-      Make sure that you have selected "Check" or "Final Check" for each problem before you submit your exam.
-    {% endblocktrans %}
-  </p>
-  <p>
-    {% blocktrans %}
-      After you submit your exam, your responses are graded and your proctoring session is reviewed.
-      You might be eligible to earn academic credit for this course if you complete all required exams
-      as well as achieve a final grade that meets credit requirements for the course.
+      После окончания экзамена ваша прокторингова сессия будет проверена.
+      Вы сможете получить документ о прохождении курса в случае, если вы выполнили
+      все требования экзамена и набрали необходимое количество баллов.
     {% endblocktrans %}
   </p>
   <button type="button" name="submit-proctored-exam" class="exam-action-button btn btn-pl-primary btn-base" data-action="submit" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}">
@@ -25,9 +20,18 @@
   {% if does_time_remain %}
     <button type="button" name="goback-proctored-exam" class="exam-action-button btn btn-secondary btn-base" data-action="start" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}" style="box-shadow: none">
       {% blocktrans %}
-        No, I'd like to continue working
+        Да, закончить сдачу экзамена и отправить работу на проверку.
       {% endblocktrans %}
     </button>
+  </div>
+  {% if does_time_remain %}
+    <div>
+      <button type="button" name="goback-proctored-exam" class="exam-action-button" data-action="start" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}">
+        {% blocktrans %}
+          Нет, я бы хотел продолжить работу над экзаменом.
+        {% endblocktrans %}
+      </button>
+    </div>
   {% endif %}
 </div>
 <script type="text/javascript">

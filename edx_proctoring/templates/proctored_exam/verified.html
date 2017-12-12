@@ -2,22 +2,27 @@
 <div class="success sequence proctored-exam passed" data-exam-id="{{exam_id}}">
   <h3>
     {% blocktrans %}
-      Your proctoring session was reviewed and passed all requirements
+      Ваша прокторинговая сессия успешно прошла все проверки.
     {% endblocktrans %}
   </h3>
 
+  <h4>
+    {% blocktrans %}
+      Результат: <b class="success"> Успешно</b>
+    {% endblocktrans %}
+  </h4>
+
   <p>
     {% blocktrans %}
-      You are eligible to purchase academic credit for this course if you complete all required exams
-      and also achieve a final grade that meets the credit requirements for the course.
+      Вы успешно завершили прохождение экзамена в режиме подтверждения личности.
+      Вы можете получить соответсвующий диплом или удостоверение за этот курс, если
+      вы прошли все экзамены, тестирования и набрали достаточное количество баллов.
     {% endblocktrans %}
   </p>
     {% include 'proctored_exam/visit_exam_content.html' %}
   <hr>
   <p>
-    {% blocktrans %}
-      View your credit eligibility status on your <a href="{{progress_page_url}}">Progress</a> page.
-    {% endblocktrans %}
+    {% blocktrans %}Посмотреть результаты тестов и экзаменов можно во вкладке{% endblocktrans %} <a href="{{progress_page_url}}">{% blocktrans %}Прогресс{% endblocktrans %}</a>
   </p>
 </div>
 {% include 'proctored_exam/footer.html' %}

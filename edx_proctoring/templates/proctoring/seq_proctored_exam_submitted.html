@@ -1,0 +1,29 @@
+{% load i18n %}
+<div class="sequence proctored-exam completed" data-exam-id="{{exam_id}}">
+  <h3>
+    {% blocktrans %}
+      Вы успешно отправили результаты экзамена на проверку.
+    {% endblocktrans %}
+  </h3>
+  <p>
+    {% blocktrans %}
+      Make sure you return to the proctoring software and select <strong>Quit</strong> to end the proctoring session.
+    {% endblocktrans %}
+  </p>
+  <h4>
+    {% blocktrans %}
+      Результаты вашего экзамена с подтверждением личности: <b> В процессе проверки</b>
+    {% endblocktrans %}
+  </h4>
+
+  <p>
+    {% blocktrans %}После завершения прокторинговой сессии вся записанная информация отправляется на проверку. Результаты обычно становятся доступны в течение 24-48 часов. Если этого не произошло, свяжитесь с нами.{% endblocktrans %}
+    <a href="{{link_urls.contact_us}}" target="_blank">{{platform_name}}</a>
+  </p>
+  <hr>
+  <p>
+    {% blocktrans %}Посмотреть результаты тестов и экзаменов можно во вкладке{% endblocktrans %} <a href="{{progress_page_url}}">{% blocktrans %}Прогресс{% endblocktrans %}</a>
+  </p>
+</div>
+{% include 'proctoring/seq_proctored_exam_footer.html' %}
+
