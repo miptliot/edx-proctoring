@@ -1,27 +1,16 @@
 {% load i18n %}
 <div class="sequence proctored-exam completed" data-exam-id="{{exam_id}}">
   <h3>
-    {% blocktrans %}
       Вы уверены, что хотите закончить прохождение экзамена и сдать работу на проверку?
-    {% endblocktrans %}
   </h3>
   <p>
-    {% blocktrans %}
       После окончания экзамена ваша прокторингова сессия будет проверена.
       Вы сможете получить документ о прохождении курса в случае, если вы выполнили
       все требования экзамена и набрали необходимое количество баллов.
-    {% endblocktrans %}
   </p>
-  <button type="button" name="submit-proctored-exam" class="exam-action-button btn btn-pl-primary btn-base" data-action="submit" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}">
-    {% blocktrans %}
-      Yes, end my proctored exam
-    {% endblocktrans %}
-  </button>
-  {% if does_time_remain %}
-    <button type="button" name="goback-proctored-exam" class="exam-action-button btn btn-secondary btn-base" data-action="start" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}" style="box-shadow: none">
-      {% blocktrans %}
-        Да, закончить сдачу экзамена и отправить работу на проверку.
-      {% endblocktrans %}
+  <div>
+    <button type="button" name="submit-proctored-exam" class="exam-action-button btn btn-pl-primary btn-base" data-action="submit" data-exam-id="{{exam_id}}" data-change-state-url="{{change_state_url}}">
+      Да, закончить сдачу экзамена и отправить работу на проверку.
     </button>
   </div>
   {% if does_time_remain %}
