@@ -11,7 +11,7 @@
     {% endblocktrans %}
   </p>
   <button class="gated-sequence start-timed-exam" data-ajax-url="{{enter_exam_endpoint}}" data-exam-id="{{exam_id}}" data-attempt-proctored=true data-start-immediately=false>
-    {% trans "Continue to my proctored exam. I want to be eligible for credit." %}
+    {% trans "Продолжить – перейти к сдаче экзамена в режиме подтверждения личности." %}
     <p>
       {% blocktrans %}
         Внимание! Нажимайте на эту ссылку только если вы собираетесь проходить экзамен прямо сейчас. Перед тем, как продолжить, закройте все лишние приложения и настройтесь на продуктивную работу.</br>
@@ -21,6 +21,5 @@
     <i class="fa fa-arrow-circle-right"></i>
   </button>
 </div>
-{% include 'proctored_exam/confirm-decline.html' %}
 {% include 'proctored_exam/footer.html' %}
 
