@@ -74,10 +74,20 @@ urlpatterns = patterns(  # pylint: disable=invalid-name
         views.ActiveExamsForUserView.as_view(),
         name='edx_proctoring.proctored_exam.active_exams_for_user'
     ),
+    url(
+        r'edx_proctoring/v1/proctored_exam/attempt/(?P<attempt_code>[-\w]+)$',
+        views.StudentProctoredExamAttemptByCode.as_view(),
+        name='edx_proctoring.proctored_exam.attempt'
+    ),
     #
     # Unauthenticated callbacks from SoftwareSecure. Note we use other
     # security token measures to protect data
     #
+    url(
+        r'edx_proctoring/proctoring_poll_status/(?P<attempt_code>[-\w]+)$',
+        callbacks.AttemptStatus.as_view(),
+        name='edx_proctoring.anonymous.proctoring_poll_status'
+    ),
     url(
         r'edx_proctoring/proctoring_launch_callback/start_exam/(?P<attempt_code>[-\w]+)$',
         callbacks.start_exam_callback,
