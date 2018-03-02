@@ -1319,3 +1319,29 @@ class ProctoredExamStudentAttemptHistoryProctoringService(models.Model):
         """ Meta class for this Django model """
         db_table = 'proctoring_proctoredexamstudentattempthistory_proctoringservice'
         verbose_name = 'proctored exam attempt history proctoring service'
+
+
+class ProctoredExamRoom(TimeStampedModel):
+    testing_center = models.CharField(max_length=1024)
+    exam = models.ForeignKey(ProctoredExam, related_name="rooms", db_index=True)
+    IN_PROGRESS = 'in_progress'
+    ARCHIVED = 'archived'
+
+    SESSION_STATUS_CHOICES = {
+        (IN_PROGRESS, _("In progress")),
+        (ARCHIVED, _("Archived")),
+    }
+    status = models.CharField(
+        max_length=11,
+        choices=SESSION_STATUS_CHOICES,
+        default=IN_PROGRESS
+    )
+
+    @classmethod
+    def status_exists(cls, some_status):
+        return some_status in [cls.IN_PROGRESS, cls.ARCHIVED]
+
+    class Meta:
+        """ Meta class for this Django model """
+        db_table = 'proctoring_proctoredexamroom'
+        verbose_name = 'proctored exam room'
