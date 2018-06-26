@@ -1326,3 +1326,17 @@ class ProctoredExamStudentAttemptHistoryProctoringService(models.Model):
         """ Meta class for this Django model """
         db_table = 'proctoring_proctoredexamstudentattempthistory_proctoringservice'
         verbose_name = 'proctored exam attempt history proctoring service'
+
+
+class ProctoredExamStudentAttemptUserSession(TimeStampedModel):
+    attempt = models.ForeignKey(ProctoredExamStudentAttempt, on_delete=models.CASCADE)
+    session_id = models.CharField(max_length=255, db_index=True)
+    user_agent = models.TextField()
+    ip_address = models.CharField(max_length=255)
+    hidden = models.BooleanField(default=False)
+
+    class Meta:
+        """ Meta class for this Django model """
+        unique_together = (('attempt', 'session_id'),)
+        db_table = 'proctoring_proctoredexamstudentattempt_usersession'
+        verbose_name = 'proctored exam attempt user session'

@@ -142,11 +142,32 @@ var edx = edx || {};
                     $(window).unbind('scroll', this.detectScroll);
                 }
 
-                if ($("#check-wa-activated" ).length && (!this.timerWaCheckAttempt)) {
+                if ($("#check-wa-activated").length && (!this.timerWaCheckAttempt)) {
                     this.timerWaCheckAttempt = setInterval(this.checkWaActivated, this.checkWaAttemptInterval, this);
                 }
+
+                this.updateSession();
             }
             return this;
+        },
+        updateSession: function() {
+            var attemptId = this.model.get('attempt_id');
+            if (attemptId && (attemptId > 0)) {
+                $.ajax({
+                    url: '/api/edx_proctoring/v1/proctored_exam/attempt/session/' + attemptId,
+                    type: 'GET',
+                    success: function(data) {
+                        if (data.session_cookie_set) {
+                            var date = new Date();
+                            date.setTime(date.getTime() + (60 * 60 * 1000 * data.session_cookie_lifetime_hours));
+                            $.cookie(data.session_cookie_name, data.session_cookie_value, {
+                                expires: date,
+                                path: '/'
+                            });
+                        }
+                    }
+                });
+            }
         },
         reloadPage: function () {
           location.reload();
