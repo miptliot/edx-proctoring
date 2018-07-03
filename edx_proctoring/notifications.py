@@ -25,6 +25,9 @@ class ProctorNotificator(object):
         msg['initiator'] = 'edx.proctoring'
         msg['created'] = time.time()
 
+        if msg['status']:
+            msg['action'] = 'change_status'
+
         log.info('Publish notification: %s' % str(msg))
 
         celery_app = cls._get_celery_app()
