@@ -118,21 +118,40 @@ var edx = edx || {};
                     this.updateRemainingTime(this);
                     this.timerId = setInterval(this.updateRemainingTime, 1000, this);
 
-                    // Bind a click handler to the exam controls
-                    var self = this;
-                    $('.exam-button-turn-in-exam').click(function(){
+                    function stopExam() {
                         $(window).unbind('beforeunload', self.unloadMessage);
-
                         $.ajax({
                             url: '/api/edx_proctoring/v1/proctored_exam/attempt/' + self.model.get('attempt_id'),
                             type: 'PUT',
                             data: {
-                              action: 'stop'
+                                action: 'stop'
                             },
                             success: function() {
-                              // change the location of the page to the active exam page
-                              // which will reflect the new state of the attempt
-                              location.href = self.model.get('exam_url_path');
+                                // change the location of the page to the active exam page
+                                // which will reflect the new state of the attempt
+                                location.href = self.model.get('exam_url_path');
+                            }
+                        });
+                    }
+
+                    // Bind a click handler to the exam controls
+                    var self = this;
+                    $('.exam-button-turn-in-exam').click(function(){
+                        $.ajax({
+                            url: '/api/edx_proctoring/v1/proctored_exam/attempt/' + self.model.get('attempt_id'),
+                            type: 'PUT',
+                            data: {
+                                action: 'check_questions_completed'
+                            },
+                            success: function(data) {
+                                if (data.completed) {
+                                    stopExam();
+                                } else {
+                                    if (confirm(gettext("Not all questions are answered." +
+                                            " Are you sure you want to finish the exam?"))) {
+                                        stopExam();
+                                    }
+                                }
                             }
                         });
                     });

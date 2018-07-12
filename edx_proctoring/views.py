@@ -41,7 +41,9 @@ from edx_proctoring.api import (
     update_attempt_status,
     update_exam_attempt,
     has_due_date_passed,
+    check_exam_questions_completed
 )
+from edx_proctoring.models import ProctoredExamStudentAttempt
 from edx_proctoring.exceptions import (
     ProctoredBaseException,
     ProctoredExamNotFoundException,
@@ -423,6 +425,18 @@ class StudentProctoredExamAttempt(AuthenticatedAPIView):
                     request.user.id,
                     ProctoredExamStudentAttemptStatus.declined
                 )
+            elif action == 'check_questions_completed':
+                exam_attempt_obj = ProctoredExamStudentAttempt.objects.get_exam_attempt_by_id(attempt_id)
+                proctored_exam = exam_attempt_obj.proctored_exam
+                course_id = proctored_exam.course_id
+                content_id = proctored_exam.content_id
+                completed = check_exam_questions_completed(course_id, content_id, request.user)
+                return Response(
+                    data={'completed': completed},
+                    status=status.HTTP_200_OK
+                )
+
+
             return Response({"exam_attempt_id": exam_attempt_id})
 
         except ProctoredBaseException, ex:
