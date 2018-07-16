@@ -36,7 +36,8 @@ from edx_proctoring.models import (
     ProctoredExamStudentAllowance,
     ProctoredExamStudentAttempt,
     ProctoredExamStudentAttemptStatus,
-    ProctoredExamReviewPolicy
+    ProctoredExamReviewPolicy,
+    ProctoredExamStudentAttemptStopReason
 )
 from edx_proctoring.serializers import (
     ProctoredExamSerializer,
@@ -1732,6 +1733,16 @@ def _get_proctored_exam_view(exam, context, exam_id, user_id, course_id):
             return None
 
     attempt = get_exam_attempt(exam_id, user_id)
+
+    try:
+        stop_reason = ProctoredExamStudentAttemptStopReason.objects.get(attempt_id=attempt['id'])
+        context.update({
+            'stopped_by_proctor': stop_reason.proctor
+        })
+    except ProctoredExamStudentAttemptStopReason.DoesNotExist:
+        context.update({
+            'stopped_by_proctor': False
+        })
 
     attempt_status = attempt['status'] if attempt else None
 

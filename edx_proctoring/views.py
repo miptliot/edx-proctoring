@@ -56,7 +56,7 @@ from edx_proctoring import constants
 from edx_proctoring.runtime import get_runtime_service
 from edx_proctoring.serializers import ProctoredExamSerializer, ProctoredExamStudentAttemptSerializer
 from edx_proctoring.models import ProctoredExamStudentAttemptStatus, ProctoredExamStudentAttempt,\
-    ProctoredExam, ProctoredExamStudentAttemptUserSession
+    ProctoredExam, ProctoredExamStudentAttemptUserSession, ProctoredExamStudentAttemptStopReason
 from edx_proctoring.notifications import ProctorNotificator
 
 from edx_proctoring.utils import (
@@ -1028,6 +1028,8 @@ class StudentProctoredExamAttemptByCode(APIView):
 
             action = request.data.get('action')
             user_id = request.data.get('user_id')
+            initiator = request.data.get('initiator', None)
+            stop_reason = request.data.get('stop_reason', '')
 
             if action and action == 'submit':
                 exam_attempt_id = update_attempt_status(
@@ -1035,6 +1037,15 @@ class StudentProctoredExamAttemptByCode(APIView):
                     user_id,
                     ProctoredExamStudentAttemptStatus.submitted
                 )
+                if initiator == 'proctor':
+                    try:
+                        ProctoredExamStudentAttemptStopReason.objects.get(attempt_id=exam_attempt_id)
+                    except ProctoredExamStudentAttemptStopReason.DoesNotExist:
+                        ProctoredExamStudentAttemptStopReason(
+                            attempt_id=exam_attempt_id,
+                            reason=stop_reason,
+                            proctor=True
+                        ).save()
 
             return Response({"exam_attempt_id": exam_attempt_id})
 

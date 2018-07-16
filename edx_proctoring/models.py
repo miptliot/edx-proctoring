@@ -1340,3 +1340,15 @@ class ProctoredExamStudentAttemptUserSession(TimeStampedModel):
         unique_together = (('attempt', 'session_id'),)
         db_table = 'proctoring_proctoredexamstudentattempt_usersession'
         verbose_name = 'proctored exam attempt user session'
+
+
+class ProctoredExamStudentAttemptStopReason(models.Model):
+    attempt = models.OneToOneField(ProctoredExamStudentAttempt, primary_key=True,
+                                   related_name="stop_reason")
+    reason = models.TextField()
+    proctor = models.BooleanField(default=False)
+
+    class Meta:
+        """ Meta class for this Django model """
+        db_table = 'proctoring_proctoredexamstudentattempt_stopreason'
+        verbose_name = 'proctored exam attempt stop reason'
