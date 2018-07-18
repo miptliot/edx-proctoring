@@ -1734,15 +1734,18 @@ def _get_proctored_exam_view(exam, context, exam_id, user_id, course_id):
 
     attempt = get_exam_attempt(exam_id, user_id)
 
-    try:
-        stop_reason = ProctoredExamStudentAttemptStopReason.objects.get(attempt_id=attempt['id'])
-        context.update({
-            'stopped_by_proctor': stop_reason.proctor
-        })
-    except ProctoredExamStudentAttemptStopReason.DoesNotExist:
-        context.update({
-            'stopped_by_proctor': False
-        })
+    stopped_by_proctor = False
+    if attempt:
+        att_id = attempt.get('id', None)
+        if att_id:
+            try:
+                stop_reason = ProctoredExamStudentAttemptStopReason.objects.get(attempt_id=att_id)
+                stopped_by_proctor = stop_reason.proctor
+            except ProctoredExamStudentAttemptStopReason.DoesNotExist:
+                pass
+    context.update({
+        'stopped_by_proctor': stopped_by_proctor
+    })
 
     attempt_status = attempt['status'] if attempt else None
 
