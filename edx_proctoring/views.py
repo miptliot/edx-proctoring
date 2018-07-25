@@ -460,9 +460,6 @@ class StudentProctoredExamAttempt(AuthenticatedAPIView):
             )
 
 
-from openedx.core.djangoapps.npoed_session_monitor.decorator import npoed_session_monitoring
-
-
 class StudentProctoredExamAttemptSession(AuthenticatedAPIView):
     """
     Endpoint for the StudentProctoredExamAttemptSession
@@ -672,7 +669,6 @@ class StudentProctoredExamAttemptCollection(AuthenticatedAPIView):
         return the status of the exam attempt
     """
 
-    @npoed_session_monitoring
     def get(self, request):  # pylint: disable=unused-argument
         """
         HTTP GET Handler. Returns the status of the exam attempt.
