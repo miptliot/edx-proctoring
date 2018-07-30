@@ -95,6 +95,23 @@ var edx = edx || {};
 
             this.render();
         },
+        checkQuestionsCompleted: function(attemptId, completedCallback, notCompletedCallback) {
+            $.ajax({
+                url: '/api/edx_proctoring/v1/proctored_exam/attempt/' + attemptId,
+                type: 'PUT',
+                data: {
+                    action: 'check_questions_completed'
+                },
+                success: function(data) {
+                    if (data.completed) {
+                        completedCallback();
+                    } else {
+                        notCompletedCallback();
+                    }
+                }
+            });
+
+        },
         render: function () {
             if (this.template !== null) {
                 if (
@@ -118,23 +135,34 @@ var edx = edx || {};
                     this.updateRemainingTime(this);
                     this.timerId = setInterval(this.updateRemainingTime, 1000, this);
 
-                    // Bind a click handler to the exam controls
                     var self = this;
-                    $('.exam-button-turn-in-exam').click(function(){
+                    function stopExam() {
                         $(window).unbind('beforeunload', self.unloadMessage);
-
                         $.ajax({
                             url: '/api/edx_proctoring/v1/proctored_exam/attempt/' + self.model.get('attempt_id'),
                             type: 'PUT',
                             data: {
-                              action: 'stop'
+                                action: 'stop'
                             },
                             success: function() {
-                              // change the location of the page to the active exam page
-                              // which will reflect the new state of the attempt
-                              location.href = self.model.get('exam_url_path');
+                                // change the location of the page to the active exam page
+                                // which will reflect the new state of the attempt
+                                location.href = self.model.get('exam_url_path');
                             }
                         });
+                    }
+
+                    // Bind a click handler to the exam controls
+                    $('.exam-button-turn-in-exam').click(function(){
+                        self.checkQuestionsCompleted(
+                            self.model.get('attempt_id'),
+                            function() { stopExam(); },
+                            function() {
+                                if (confirm("Не на все вопросы были даны ответы, точно завершить экзамен?")) {
+                                    stopExam();
+                                }
+                            }
+                        );
                     });
                 }
                 else {
@@ -179,6 +207,26 @@ var edx = edx || {};
         updateRemainingTime: function (self) {
             self.timerTick ++;
             self.secondsLeft --;
+
+            var attemptId = self.model.get('attempt_id');
+            var timeWarningSemaphore = null;
+            var timeWarningSemaphoreName = 'timeWarningSemaphore_' + attemptId;
+            if ((self.secondsLeft < 60) && (self.secondsLeft > 20)) {
+                timeWarningSemaphore = $.cookie(timeWarningSemaphoreName);
+                if (!timeWarningSemaphore) {
+                    $.cookie(timeWarningSemaphoreName, '1', {
+                        path: '/'
+                    });
+                    self.checkQuestionsCompleted(
+                        attemptId,
+                        function() { },
+                        function() {
+                            alert("Вы не нажали 'Проверить' в некоторых заданиях, будьте внимательны.");
+                        }
+                    );
+                }
+            }
+
             var reloadStatuses = ['error', 'submitted', 'verified', 'rejected'];
             if (self.timerTick % self.poll_interval === 0) {
                 var url = self.model.url + '/' + self.model.get('attempt_id');
