@@ -3,7 +3,7 @@
 
   <div class="">
     {% if provider_name == "WEB_ASSISTANT" %}
-      Дождитесь, пока проктор активирует вашу сессию, затем нажмите "Начать экзамен"
+      {% blocktrans %}Please wait until proctor will activate your session and then push 'Start exam' button{% endblocktrans %}
       <input type="hidden" name="check-wa-activated" id="check-wa-activated" value="1">
     {% else %}
     <h3>

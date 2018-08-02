@@ -158,7 +158,7 @@ var edx = edx || {};
                             self.model.get('attempt_id'),
                             function() { stopExam(); },
                             function() {
-                                if (confirm("Не на все вопросы были даны ответы, точно завершить экзамен?")) {
+                                if (confirm("Some questions are unanswered. Are you sure you want to finish exam?")) {
                                     stopExam();
                                 }
                             }
@@ -221,7 +221,7 @@ var edx = edx || {};
                         attemptId,
                         function() { },
                         function() {
-                            alert("Вы не нажали 'Проверить' в некоторых заданиях, будьте внимательны.");
+                            alert("You did not push 'Complete' button for some questions.");
                         }
                     );
                 }
