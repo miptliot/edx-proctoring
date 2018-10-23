@@ -1108,3 +1108,15 @@ msgstr "пробный"
 #: views.py:537
 msgid "proctored"
 msgstr "наблюдаемый"
+
+#: static/proctoring/js/views/proctored_exam_attempt_view.js:187
+msgid "Are you sure you want to remove this student's exam attempt?"
+msgstr "Вы действительно хотите удалить выбранную попытку?"
+
+#: static/proctoring/js/views/proctored_exam_view.js:161
+msgid "Some questions are unanswered. Are you sure you want to finish exam?"
+msgstr "Не на все вопросы были даны ответы, точно завершить экзамен?"
+
+#: static/proctoring/js/views/proctored_exam_view.js:224
+msgid "You did not push 'Complete' button for some questions."
+msgstr "Вы не нажали 'Проверить' в некоторых заданиях, будьте внимательны."

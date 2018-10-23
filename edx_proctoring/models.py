@@ -27,7 +27,10 @@ from edx_proctoring.exceptions import (
 )
 from edx_proctoring.notifications import ProctorNotificator
 from opaque_keys.edx.keys import CourseKey
-from openedx.core.lib.courses import course_image_url
+try:
+    from openedx.core.lib.courses import course_image_url
+except ImportError:
+    pass
 
 
 @six.python_2_unicode_compatible

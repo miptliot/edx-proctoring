@@ -54,7 +54,8 @@ from edx_proctoring.notifications import ProctorNotificator
 from edx_proctoring.backends import get_backend_provider, get_proctoring_settings, get_proctoring_settings_param
 from edx_proctoring.runtime import get_runtime_service
 from xmodule.modulestore.django import modulestore
-from opaque_keys.edx.keys import UsageKey
+from opaque_keys.edx.keys import UsageKey, CourseKey
+from courseware.models import StudentModule
 
 
 log = logging.getLogger(__name__)
@@ -1961,3 +1962,31 @@ def get_xblock_exam_params(content):
         oldest = min(due_dates)
     res['deadline'] = oldest
     return res
+
+
+def get_all_exam_problems(content_id):
+
+    def _get_problems(block):
+        _problems = []
+        for child in block.get_children():
+            if child.category == 'problem':
+                _problems.append(str(child.location))
+            _problems.extend(_get_problems(child))
+        return _problems
+
+    item = modulestore().get_item(UsageKey.from_string(content_id))
+    return _get_problems(item)
+
+
+def check_exam_questions_completed(course_id, content_id, user):
+    items = StudentModule.objects.filter(course_id=CourseKey.from_string(course_id),
+                                         student=user,
+                                         module_type='problem')
+    student_module = {}
+    for item in items:
+        student_module[str(item.module_state_key)] = item.grade
+    problems = get_all_exam_problems(content_id)
+    for problem_id in problems:
+        if problem_id not in student_module or student_module[problem_id] is None:
+            return False
+    return True

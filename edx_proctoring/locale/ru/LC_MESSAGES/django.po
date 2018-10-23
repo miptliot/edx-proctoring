@@ -1108,3 +1108,9 @@ msgstr "пробный"
 #: views.py:537
 msgid "proctored"
 msgstr "наблюдаемый"
+
+msgid "Please wait until proctor will activate your session and then push 'Start exam' button"
+msgstr "Дождитесь, пока проктор активирует вашу сессию, затем нажмите 'Начать экзамен'"
+
+msgid "Your session was stopped by proctor"
+msgstr "Ваша сессия остановлена проктором"
