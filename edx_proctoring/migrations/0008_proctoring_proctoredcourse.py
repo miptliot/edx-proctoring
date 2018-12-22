@@ -12,7 +12,10 @@ def migrate_all_courses(apps, schema_editor):
     ProctoredCourse = apps.get_model("edx_proctoring", "ProctoredCourse")
     ProctoredCourseProctoringService = apps.get_model("edx_proctoring", "ProctoredCourseProctoringService")
 
-    courses = modulestore().get_courses()
+    try:
+        courses = modulestore().get_courses()
+    except:
+        courses = []
     for course in courses:
         services_list_to_save = [service.strip() for service in course.available_proctoring_services.split(',')
                                  if service.strip()]
