@@ -430,7 +430,7 @@ class StudentProctoredExamAttempt(AuthenticatedAPIView):
                 proctored_exam = exam_attempt_obj.proctored_exam
                 course_id = proctored_exam.course_id
                 content_id = proctored_exam.content_id
-                completed = check_exam_questions_completed(course_id, content_id, request.user)
+                completed = check_exam_questions_completed(request, course_id, content_id)
                 return Response(
                     data={'completed': completed},
                     status=status.HTTP_200_OK
