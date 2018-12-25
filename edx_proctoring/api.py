@@ -56,6 +56,8 @@ from edx_proctoring.runtime import get_runtime_service
 from xmodule.modulestore.django import modulestore
 from opaque_keys.edx.keys import UsageKey, CourseKey
 from courseware.models import StudentModule
+from courseware.model_data import FieldDataCache
+from courseware.module_render import get_module_for_descriptor
 
 
 log = logging.getLogger(__name__)
@@ -1964,28 +1966,41 @@ def get_xblock_exam_params(content):
     return res
 
 
-def get_all_exam_problems(content_id):
+def get_all_exam_problems(block):
+    _problems = []
+    if block.category == 'library_content':
+        children = block.get_child_descriptors()
+    else:
+        children = block.get_children()
+    for child in children:
+        if child.category == 'problem':
+            _problems.append(str(child.location))
+        _problems.extend(get_all_exam_problems(child))
+    return _problems
 
-    def _get_problems(block):
-        _problems = []
-        for child in block.get_children():
-            if child.category == 'problem':
-                _problems.append(str(child.location))
-            _problems.extend(_get_problems(child))
-        return _problems
 
-    item = modulestore().get_item(UsageKey.from_string(content_id))
-    return _get_problems(item)
+def check_exam_questions_completed(request, course_id, content_id):
+    user = request.user
+    course_key = CourseKey.from_string(course_id)
+    usage_key = UsageKey.from_string(content_id)
 
+    course = modulestore().get_course(course_key)
+    seq_item = modulestore().get_item(usage_key)
 
-def check_exam_questions_completed(course_id, content_id, user):
+    field_data_cache = FieldDataCache.cache_for_descriptor_descendents(
+        course_key, user, seq_item
+    )
+    section = get_module_for_descriptor(
+        user, request, seq_item, field_data_cache, course_key, course=course
+    )
+
     items = StudentModule.objects.filter(course_id=CourseKey.from_string(course_id),
                                          student=user,
                                          module_type='problem')
     student_module = {}
     for item in items:
         student_module[str(item.module_state_key)] = item.grade
-    problems = get_all_exam_problems(content_id)
+    problems = get_all_exam_problems(section)
     for problem_id in problems:
         if problem_id not in student_module or student_module[problem_id] is None:
             return False
