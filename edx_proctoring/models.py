@@ -1355,3 +1355,12 @@ class ProctoredExamStudentAttemptStopReason(models.Model):
         """ Meta class for this Django model """
         db_table = 'proctoring_proctoredexamstudentattempt_stopreason'
         verbose_name = 'proctored exam attempt stop reason'
+
+
+class UsersWithSpecialPermissions(models.Model):
+    user = models.OneToOneField(User, related_name='special_permissions')
+
+    class Meta:
+        """ Meta class for this Django model """
+        db_table = 'proctoring_users_with_special_permissions'
+        verbose_name = 'user with special permissions'

@@ -68,6 +68,12 @@ from edx_proctoring.utils import (
     get_attempt_session_cookie,
     get_client_ip
 )
+try:
+    from student.auth import check_special_permissions
+except ImportError:
+    # for backwards compatibility (remove in future)
+    def check_special_permissions(user):
+        return user.id in getattr(settings, 'USERS_WITH_SPECIAL_PERMS_IDS', [])
 
 ATTEMPTS_PER_PAGE = 25
 
@@ -77,7 +83,7 @@ LOG = logging.getLogger("edx_proctoring_views")
 def require_staff(func):
     """View decorator that requires that the user have staff permissions. """
     def wrapped(request, *args, **kwargs):  # pylint: disable=missing-docstring
-        if request.user.is_staff or request.user.id in getattr(settings, 'USERS_WITH_SPECIAL_PERMS_IDS', []):
+        if request.user.is_staff or check_special_permissions(request.user):
             return func(request, *args, **kwargs)
         else:
             return Response(
@@ -813,7 +819,7 @@ class StudentProctoredExamAttemptsByCourse(AuthenticatedAPIView):
         HTTP GET Handler. Returns the status of the exam attempt.
         """
         # course staff only views attempts of timed exams. edx staff can view both timed and proctored attempts.
-        time_exams_only = not (request.user.is_staff or request.user.id in getattr(settings, 'USERS_WITH_SPECIAL_PERMS_IDS', []))
+        time_exams_only = not (request.user.is_staff or check_special_permissions(request.user))
 
         if search_by is not None:
             exam_attempts = ProctoredExamStudentAttempt.objects.get_filtered_exam_attempts(

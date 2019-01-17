@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.contrib import admin
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.admin import ForeignKeyAutocompleteAdmin
 from edx_proctoring.models import (
     ProctoredExam,
     ProctoredExamReviewPolicy,
@@ -20,6 +21,7 @@ from edx_proctoring.models import (
     ProctoredExamSoftwareSecureReviewHistory,
     ProctoredExamStudentAttempt,
     ProctoredExamStudentAttemptStatus,
+    UsersWithSpecialPermissions
 )
 from edx_proctoring.api import update_attempt_status
 from edx_proctoring.backends import get_backend_provider
@@ -471,6 +473,17 @@ class ProctoredExamStudentAttemptAdmin(admin.ModelAdmin):
         return True
 
 
+class UsersWithSpecialPermissionsAdmin(ForeignKeyAutocompleteAdmin):
+    list_display = ('user_id',)
+    search_fields = ('user__id', 'user__username')
+
+    model_fields = UsersWithSpecialPermissions._meta.get_fields()
+
+    related_search_fields = {
+        'user': ('email', 'username', 'first_name', 'last_name'),
+    }
+
+
 def prettify_course_id(course_id):
     """
     Prettify the COURSE ID string
@@ -482,3 +495,4 @@ admin.site.register(ProctoredExamStudentAttempt, ProctoredExamStudentAttemptAdmi
 admin.site.register(ProctoredExamReviewPolicy, ProctoredExamReviewPolicyAdmin)
 admin.site.register(ProctoredExamSoftwareSecureReview, ProctoredExamSoftwareSecureReviewAdmin)
 admin.site.register(ProctoredExamSoftwareSecureReviewHistory, ProctoredExamSoftwareSecureReviewHistoryAdmin)
+admin.site.register(UsersWithSpecialPermissions, UsersWithSpecialPermissionsAdmin)
