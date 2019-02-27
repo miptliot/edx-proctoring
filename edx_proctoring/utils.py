@@ -26,6 +26,8 @@ from edx_proctoring.models import (
 
 log = logging.getLogger(__name__)
 
+ATTEMPTS_SESSION_ID_COOKIE_NAME = 'proctoring_session'
+
 
 class AuthenticatedAPIView(APIView):
     """
@@ -213,3 +215,18 @@ def _emit_event(name, context, data):
             'Analytics tracker not properly configured. '
             'If this message appears in a production environment, please investigate'
         )
+
+
+def get_attempt_session_cookie(request, attempt_id):
+    cookie_name = ATTEMPTS_SESSION_ID_COOKIE_NAME + '_' + attempt_id
+    cookie_value = request.COOKIES.get(cookie_name, '')
+    return cookie_name, cookie_value
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

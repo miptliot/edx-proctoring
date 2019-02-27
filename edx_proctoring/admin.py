@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.contrib import admin
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.admin import ForeignKeyAutocompleteAdmin
 from edx_proctoring.models import (
     ProctoredExam,
     ProctoredExamReviewPolicy,
@@ -20,6 +21,7 @@ from edx_proctoring.models import (
     ProctoredExamSoftwareSecureReviewHistory,
     ProctoredExamStudentAttempt,
     ProctoredExamStudentAttemptStatus,
+    UsersWithSpecialPermissions,
 )
 from edx_proctoring.api import update_attempt_status
 from edx_proctoring.backends import get_backend_provider
@@ -292,9 +294,6 @@ class ProctoredExamSoftwareSecureReviewAdmin(admin.ModelAdmin):
         """
         review.reviewed_by = request.user
         review.save()
-        # call the review saved and since it's coming from
-        # the Django admin will we accept failures
-        get_backend_provider().on_review_saved(review, allow_rejects=True)
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(ProctoredExamSoftwareSecureReviewAdmin, self).get_form(request, obj, **kwargs)
@@ -463,8 +462,18 @@ class ProctoredExamStudentAttemptAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        """Don't allow deletes"""
-        return False
+        """Allow deletes"""
+        return True
+
+    class UsersWithSpecialPermissionsAdmin(ForeignKeyAutocompleteAdmin):
+        list_display = ('user_id',)
+        search_fields = ('user__id', 'user__username')
+
+        model_fields = UsersWithSpecialPermissions._meta.get_fields()
+
+        related_search_fields = {
+            'user': ('email', 'username', 'first_name', 'last_name'),
+        }
 
 
 def prettify_course_id(course_id):
@@ -478,3 +487,4 @@ admin.site.register(ProctoredExamStudentAttempt, ProctoredExamStudentAttemptAdmi
 admin.site.register(ProctoredExamReviewPolicy, ProctoredExamReviewPolicyAdmin)
 admin.site.register(ProctoredExamSoftwareSecureReview, ProctoredExamSoftwareSecureReviewAdmin)
 admin.site.register(ProctoredExamSoftwareSecureReviewHistory, ProctoredExamSoftwareSecureReviewHistoryAdmin)
+admin.site.register(UsersWithSpecialPermissions, UsersWithSpecialPermissionsAdmin)
