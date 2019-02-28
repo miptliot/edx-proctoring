@@ -465,15 +465,16 @@ class ProctoredExamStudentAttemptAdmin(admin.ModelAdmin):
         """Allow deletes"""
         return True
 
-    class UsersWithSpecialPermissionsAdmin(ForeignKeyAutocompleteAdmin):
-        list_display = ('user_id',)
-        search_fields = ('user__id', 'user__username')
 
-        model_fields = UsersWithSpecialPermissions._meta.get_fields()
+class UsersWithSpecialPermissionsAdmin(ForeignKeyAutocompleteAdmin):
+    list_display = ('user_id',)
+    search_fields = ('user__id', 'user__username')
 
-        related_search_fields = {
-            'user': ('email', 'username', 'first_name', 'last_name'),
-        }
+    model_fields = UsersWithSpecialPermissions._meta.get_fields()
+
+    related_search_fields = {
+        'user': ('email', 'username', 'first_name', 'last_name'),
+    }
 
 
 def prettify_course_id(course_id):
