@@ -1542,6 +1542,7 @@ def get_attempt_status_summary(user_id, course_id, content_id):
 
     # let's check credit eligibility
     credit_service = get_runtime_service('credit')
+    credit_state = {}
     # practice exams always has an attempt status regardless of
     # eligibility
     if credit_service and not exam['is_practice_exam']:
